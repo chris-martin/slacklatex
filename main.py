@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from string import Template
+import argparse
 import configparser
 import os
 import subprocess
@@ -8,8 +9,19 @@ import tempfile
 from flask import Flask, Response, request
 import requests as py3reqs
 
+parser = argparse.ArgumentParser(
+    description='Slack bot for rendering LaTeX formulas')
+parser.add_argument('--config-file', type=str, dest='config_file',
+                    required=True,
+                    help='Path of an INI file containing Slack tokens')
+parser.add_argument('--template-file', type=str, dest='template_file',
+                    required=True,
+                    help='Path of the .tex file used for rendering')
+
+args = parser.parse_args()
+
 config = configparser.ConfigParser()
-config.read('./config.ini')
+config.read(args.config_file)
 SLASH_COMMAND_TOKEN = config.get('Slack', 'slash_command_verification_token')
 API_TOKEN = config.get('Slack', 'bot_user_api_token')
 app = Flask(__name__)
@@ -37,7 +49,7 @@ def render_latex():
 
 
 def str2png(input_string, work_dir):
-    with open('template.tex','r') as f:
+    with open(args.template_file,'r') as f:
         s = Template(f.read())
     out_txt = s.substitute(my_text=input_string)
 
