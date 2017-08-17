@@ -43,7 +43,7 @@ def render_latex():
         files = {'file':open(os.path.join(work_dir, 'out.png'), 'rb')}
         payload['token'] = API_TOKEN
         payload['filename'] = 'LaTeX.png'
-        payload['initial_comment'] = request.form['text']
+        payload['initial_comment'] = '@' + request.form['user_name'] + ' ' + request.form['text']
         payload['channels'] = [request.form['channel_id']]
         r = py3reqs.post(out_url, params=payload, files=files)
         r.raise_for_status()
