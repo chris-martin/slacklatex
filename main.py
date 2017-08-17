@@ -11,6 +11,7 @@ import requests as py3reqs
 
 parser = argparse.ArgumentParser(
     description='Slack bot for rendering LaTeX formulas')
+parser.add_argument('--host', type=str, dest='host', required=True)
 parser.add_argument('--port', type=int, dest='port', required=True)
 parser.add_argument('--config-file', type=str, dest='config_file',
                     required=True,
@@ -60,4 +61,4 @@ def str2png(input_string, work_dir):
     subprocess.check_call(['convert', '-density', '300', 'out.pdf', '-quality', '100', '-sharpen', '0x1.0', 'out.png'], cwd=work_dir, stdout=None, stderr=None)
 
 if __name__=="__main__":
-    app.run("0.0.0.0", port=args.port)
+    app.run(args.host, port=args.port)
